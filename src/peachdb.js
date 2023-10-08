@@ -84,7 +84,7 @@ class PeachDb {
         adapter: 'websql',
       }
     } else {
-      PouchDB.plugin(PouchAdapterCordovaSqlite);
+      PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
       options = {
         ...options,
         adapter: 'cordova-sqlite',

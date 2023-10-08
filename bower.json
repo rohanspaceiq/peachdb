@@ -19,6 +19,7 @@
   "dependencies": {
     "pouchdb": "~5.2.0",
     "pouchdb-find": ">=0.10.3",
+    "pouchdb-adapter-cordova-sqlite": "https://github.com/pouchdb-community/pouchdb-adapter-cordova-sqlite.git",
     "upsert": "git+https://github.com/pouchdb/upsert.git#40b041773b6adbf18d7b6c8a95c368cf8c88d9da",
     "angular-pouchdb": "~4.1.0",
     "bluebird": "~2.9.34",
