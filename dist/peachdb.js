@@ -125,7 +125,7 @@ var PeachDb = (function () {
         adapter: 'websql'
       });
     } else {
-      PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
+      PouchDB.plugin('pouchdb-adapter-cordova-sqlite');
       options = _extends({}, options, {
         adapter: 'cordova-sqlite',
         iosDatabaseLocation: 'default'
