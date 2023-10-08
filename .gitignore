@@ -1,0 +1,9 @@
+node_modules
+demo/peachdb.js
+demo/app.js
+mobile-demo-test/peachdb.js
+mobile-demo-test/app.js
+mobile-demo-test/www/lib
+mobile-demo-test/resources/
+bower_components
+.idea

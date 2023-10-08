@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pouchdb/3.4.0/pouchdb.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/darul75/ng-prettyjson/master/dist/ng-prettyjson.min.js"></script>
+    <script type="text/javascript"
+            src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.4.0/restangular.js"></script>
+
+    <script type="text/javascript" src="https://cdn.rawgit.com/nolanlawson/pouchdb-find/master/dist/pouchdb.find.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/darul75/ng-prettyjson/master/src/ace.js"></script>
+
+    <script type="text/javascript" src="https://cdn.rawgit.com/angular-pouchdb/angular-pouchdb/master/angular-pouchdb.js"></script>
+    <script type="text/javascript" src="peachdb.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/base-min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/darul75/ng-prettyjson/master/dist/ng-prettyjson.min.css">
+  </head>
+
+  <body ng-app="peachdemo" ng-controller="PeachCtrl as peach">
+
+  <ion-pane>
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">PeachDB Mobile Demo</h1>
+    </ion-header-bar>
+    <ion-content>
+      <h1><img src="http://upload.wikimedia.org/wikipedia/en/d/d5/Peach_(Super_Mario_3D_World).png"
+               style="width:125px;height;125px;">
+        PeachDB
+
+      </h1>
+
+      <h2>Users</h2>
+      <button type="button" ng-click="peach.getUser()">Get User</button>
+      <button type="button" ng-click="peach.modifyUser()">Modify User</button>
+
+      <button type="button" ng-click="peach.sync()">Sync Users</button>
+      <button type="button" ng-click="peach.destroy()">Destroy DB</button>
+      Search Users<input type="text" ng-model="searchTerm" ng-change="peach.search(searchTerm)">
+      <hr>
+      <h3>Query Users</h3>
+      <div pretty-json="peach.searchOptions"  on-edit="peach.query(newJson)" edition="true">
+
+      </div>
+      <button ng-click="peach.query(peach.searchOptions)">Search</button>
+
+      <div ng-if="peach.users.isLoading()">
+        <img src="http://media.giphy.com/media/O2PYv38PEsl7W/giphy.gif">
+      </div>
+
+      <pre pretty-json="peach.results"></pre>
+
+      <h2>Mail</h2>
+      <button type="button" ng-click="peach.mailItems.sync()">Sync Mail</button>
+      <button type="button" ng-click="peach.mailItems.db.destroy()">Destroy DB</button>
+      <input type="text" ng-model="peach.searchMailTerm" ng-change="peach.searchMail(peach.searchMailTerm)">
+
+      <div ng-if="peach.mailItems.isLoading()">
+        <img src="http://media.giphy.com/media/O2PYv38PEsl7W/giphy.gif">
+      </div>
+      <pre pretty-json="peach.mailResults"></pre>
+
+      <h2>Rooms using angular service</h2>
+      <input type="text" ng-model="peach.searchRoomTerm" ng-change="peach.searchRooms(peach.searchRoomTerm)">
+
+      <div ng-if="peach.roomDb.isLoading()">
+        <img src="http://media.giphy.com/media/O2PYv38PEsl7W/giphy.gif">
+      </div>
+      <pre pretty-json="peach.roomResults"></pre>
+      <h2>All the Couriers!@#?</h2>
+      <pre pretty-json="peach.couriers"></pre>
+
+      <h2>All the MAIL ITEMS!@#?</h2>
+      <button ng-click="peach.loadMailItems()">Hit it!</button>
+      <pre pretty-json="peach.allMailItems"></pre>
+
+    </ion-content>
+  </ion-pane>
+
+  </body>
+</html>
