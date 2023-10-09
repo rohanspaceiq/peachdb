@@ -58,7 +58,7 @@ class OfflineError extends PeachError {
 class PeachDb {
   constructor($q, PeachRestangular, pouchDB, $timeout, $interval, path, selector,
     autoSync = false, autoSyncInterval = 180000, beforeSync = angular.noop,
-    afterSync = angular.noop, itemLimit) {
+    afterSync = angular.noop, itemLimit, PouchAdapterCordovaSqlite) {
 
     this.$q = $q;
     this.$timeout = $timeout;
@@ -84,7 +84,7 @@ class PeachDb {
         adapter: 'websql',
       }
     } else {
-      PouchDB.plugin('pouchdb-adapter-cordova-sqlite');
+      window.PouchDB.plugin(PouchAdapterCordovaSqlite);
       options = {
         ...options,
         adapter: 'cordova-sqlite',

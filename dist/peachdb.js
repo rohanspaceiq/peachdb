@@ -94,7 +94,7 @@ var OfflineError = (function (_PeachError2) {
 })(PeachError);
 
 var PeachDb = (function () {
-  function PeachDb($q, PeachRestangular, pouchDB, $timeout, $interval, path, selector, autoSync, autoSyncInterval, beforeSync, afterSync, itemLimit) {
+  function PeachDb($q, PeachRestangular, pouchDB, $timeout, $interval, path, selector, autoSync, autoSyncInterval, beforeSync, afterSync, itemLimit, PouchAdapterCordovaSqlite) {
     if (autoSync === undefined) autoSync = false;
     if (autoSyncInterval === undefined) autoSyncInterval = 180000;
     if (beforeSync === undefined) beforeSync = angular.noop;
@@ -125,7 +125,7 @@ var PeachDb = (function () {
         adapter: 'websql'
       });
     } else {
-      PouchDB.plugin('pouchdb-adapter-cordova-sqlite');
+      window.PouchDB.plugin(PouchAdapterCordovaSqlite);
       options = _extends({}, options, {
         adapter: 'cordova-sqlite',
         iosDatabaseLocation: 'default'
