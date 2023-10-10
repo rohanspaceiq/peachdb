@@ -96,7 +96,7 @@ class PeachDb {
       }
     });
     window.PouchDB.utils = { Promise: window.Promise };
-    window.PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
+    window.PouchDB.plugin('pouchdb-adapter-cordova-sqlite');
     let options = {
       auto_compaction: true,
       adapter: 'cordova-sqlite',
