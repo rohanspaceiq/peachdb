@@ -111,11 +111,6 @@ var PeachDb = (function () {
     this.selector = selector;
     this.itemLimit = itemLimit;
     this.syncInProgress = false;
-    let options = {
-      auto_compaction: true,
-      adapter: 'cordova-sqlite',
-      iosDatabaseLocation: 'default',
-    };
 
     window.PouchDB.plugin({
       upsertBulk: function upsertBulk(docs) {
@@ -154,9 +149,12 @@ var PeachDb = (function () {
       }
     });
     window.PouchDB.utils = { Promise: window.Promise };
-    /**
-     * if we're using sqlite we can't use forward slashes for database names.
-     */
+    window.PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
+    let options = {
+      auto_compaction: true,
+      adapter: 'cordova-sqlite',
+      iosDatabaseLocation: 'default',
+    };
     this.db = pouchDB(path, options);
     this.autoSync = autoSync;
     this.initialized = false;

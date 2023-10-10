@@ -59,7 +59,6 @@ class PeachDb {
   constructor($q, PeachRestangular, pouchDB, $timeout, $interval, path, selector,
     autoSync = false, autoSyncInterval = 180000, beforeSync = angular.noop,
     afterSync = angular.noop, itemLimit) {
-
     this.$q = $q;
     this.$timeout = $timeout;
     this.$interval = $interval;
@@ -69,11 +68,6 @@ class PeachDb {
     this.selector = selector;
     this.itemLimit = itemLimit;
     this.syncInProgress = false;
-    let options = {
-      auto_compaction: true,
-      adapter: 'cordova-sqlite',
-      iosDatabaseLocation: 'default',
-    };
 
     window.PouchDB.plugin({
       upsertBulk: function upsertBulk(docs, opts = {}) {
@@ -102,9 +96,12 @@ class PeachDb {
       }
     });
     window.PouchDB.utils = { Promise: window.Promise };
-    /**
-     * if we're using sqlite we can't use forward slashes for database names.
-     */
+    window.PouchDB.plugin(require('pouchdb-adapter-cordova-sqlite'));
+    let options = {
+      auto_compaction: true,
+      adapter: 'cordova-sqlite',
+      iosDatabaseLocation: 'default',
+    };
     this.db = pouchDB(path, options);
     this.autoSync = autoSync;
     this.initialized = false;
