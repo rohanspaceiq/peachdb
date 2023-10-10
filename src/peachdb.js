@@ -71,7 +71,7 @@ class PeachDb {
     this.syncInProgress = false;
     let options = {
       auto_compaction: true,
-      adapter: 'websql',
+      adapter: 'cordova-sqlite',
       iosDatabaseLocation: 'default',
     };
 
