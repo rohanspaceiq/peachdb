@@ -94,7 +94,7 @@ var OfflineError = (function (_PeachError2) {
 })(PeachError);
 
 var PeachDb = (function () {
-  function PeachDb($q, PeachRestangular, pouchDB, $timeout, $interval, path, selector, autoSync, autoSyncInterval, beforeSync, afterSync, itemLimit, PouchAdapterCordovaSqlite) {
+  function PeachDb($q, PeachRestangular, pouchDB, $timeout, $interval, path, selector, autoSync, autoSyncInterval, beforeSync, afterSync, itemLimit) {
     if (autoSync === undefined) autoSync = false;
     if (autoSyncInterval === undefined) autoSyncInterval = 180000;
     if (beforeSync === undefined) beforeSync = angular.noop;
@@ -111,26 +111,12 @@ var PeachDb = (function () {
     this.selector = selector;
     this.itemLimit = itemLimit;
     this.syncInProgress = false;
-    var options = {
-      auto_compaction: true
+    let options = {
+      auto_compaction: true,
+      adapter: 'websql',
+      iosDatabaseLocation: 'default',
     };
 
-    /**
-     * If `openDatabase` is defined that means websql is still supported, which in turn means
-     * we are running the mail app in iOS 12. Otherwise, we are on iOS 13 and we want to use
-     * sqlite because websql is not supported and indexeDB is really slow.
-     */
-    if (!!openDatabase) {
-      options = _extends({}, options, {
-        adapter: 'websql'
-      });
-    } else {
-      window.PouchDB.plugin(PouchAdapterCordovaSqlite);
-      options = _extends({}, options, {
-        adapter: 'cordova-sqlite',
-        iosDatabaseLocation: 'default'
-      });
-    }
     window.PouchDB.plugin({
       upsertBulk: function upsertBulk(docs) {
         var _this = this;
@@ -171,7 +157,7 @@ var PeachDb = (function () {
     /**
      * if we're using sqlite we can't use forward slashes for database names.
      */
-    this.db = pouchDB(!!openDatabase ? path : path.replace('/', ''), options);
+    this.db = pouchDB(path, options);
     this.autoSync = autoSync;
     this.initialized = false;
     this.initPromise = null;
