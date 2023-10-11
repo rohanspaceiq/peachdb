@@ -2,7 +2,7 @@
 /* global angular,emit */
 /* eslint no-param-reassign:0 */
 'use strict';
-import 'pouchdb-adapter-cordova-sqlite' ;
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -111,7 +111,26 @@ var PeachDb = (function () {
     this.selector = selector;
     this.itemLimit = itemLimit;
     this.syncInProgress = false;
+    var options = {
+      auto_compaction: true
+    };
 
+    /**
+     * If `openDatabase` is defined that means websql is still supported, which in turn means
+     * we are running the mail app in iOS 12. Otherwise, we are on iOS 13 and we want to use
+     * sqlite because websql is not supported and indexeDB is really slow.
+     */
+    if (!!openDatabase) {
+      options = _extends({}, options, {
+        adapter: 'websql'
+      });
+    } else {
+      PouchDB.plugin(PouchAdapterCordovaSqlite);
+      options = _extends({}, options, {
+        adapter: 'cordova-sqlite',
+        iosDatabaseLocation: 'default'
+      });
+    }
     window.PouchDB.plugin({
       upsertBulk: function upsertBulk(docs) {
         var _this = this;
@@ -149,13 +168,11 @@ var PeachDb = (function () {
       }
     });
     window.PouchDB.utils = { Promise: window.Promise };
-    window.PouchDB.plugin('pouchdb-adapter-cordova-sqlite');
-    let options = {
-      auto_compaction: true,
-      adapter: 'cordova-sqlite',
-      iosDatabaseLocation: 'default',
-    };
-    this.db = pouchDB(path, options);
+    /**
+     * if we're using sqlite we can't use forward slashes for database names.
+     */
+    console.log(path);
+    this.db = pouchDB(!!openDatabase ? path : path.replace('/', ''), options);
     this.autoSync = autoSync;
     this.initialized = false;
     this.initPromise = null;
