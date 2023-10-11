@@ -3,8 +3,6 @@
 /* eslint no-param-reassign:0 */
 'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x12, _x13, _x14) { var _again = true; _function: while (_again) { var object = _x12, property = _x13, receiver = _x14; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x12 = parent; _x13 = property; _x14 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -111,26 +109,7 @@ var PeachDb = (function () {
     this.selector = selector;
     this.itemLimit = itemLimit;
     this.syncInProgress = false;
-    var options = {
-      auto_compaction: true
-    };
 
-    /**
-     * If `openDatabase` is defined that means websql is still supported, which in turn means
-     * we are running the mail app in iOS 12. Otherwise, we are on iOS 13 and we want to use
-     * sqlite because websql is not supported and indexeDB is really slow.
-     */
-    if (!!openDatabase) {
-      options = _extends({}, options, {
-        adapter: 'websql'
-      });
-    } else {
-      PouchDB.plugin(PouchAdapterCordovaSqlite);
-      options = _extends({}, options, {
-        adapter: 'cordova-sqlite',
-        iosDatabaseLocation: 'default'
-      });
-    }
     window.PouchDB.plugin({
       upsertBulk: function upsertBulk(docs) {
         var _this = this;
@@ -166,13 +145,13 @@ var PeachDb = (function () {
           return _this.bulkDocs(docs);
         });
       }
+
     });
     window.PouchDB.utils = { Promise: window.Promise };
     /**
      * if we're using sqlite we can't use forward slashes for database names.
      */
-    console.log(path);
-    this.db = pouchDB(!!openDatabase ? path : path.replace('/', ''), options);
+    this.db = pouchDB(path);
     this.autoSync = autoSync;
     this.initialized = false;
     this.initPromise = null;
